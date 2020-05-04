@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,7 +15,7 @@ namespace PersonalPage.Data.Entities
         [ForeignKey("AuthorId")]
         public Author Author { get; set; }
 
-        public int PostId { get; set; }
+        public int? PostId { get; set; }
 
         [ForeignKey("PostId")]
         public Post Post { get; set; }
@@ -28,6 +29,8 @@ namespace PersonalPage.Data.Entities
 
         [ForeignKey("CommentId")]
         public Comment ParentComment { get; set; }
+
+        public ICollection<Comment> Comments { get; set; }
 
         public bool Approved { get; set; }
     }
