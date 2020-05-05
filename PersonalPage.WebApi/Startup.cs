@@ -8,6 +8,11 @@ using PersonalPage.Data;
 using PersonalPage.Data.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.OpenApi.Models;
+using PersonalPage.Core;
+using Autofac;
+using System;
+using System.Reflection;
+using Autofac.Extensions.DependencyInjection;
 
 namespace PersonalPage.WebApi
 {
@@ -20,16 +25,18 @@ namespace PersonalPage.WebApi
 
         public IConfiguration Configuration { get; }
 
+        public ILifetimeScope AutofacContainer { get; private set; }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]);
-            });            
+            });
 
             services.AddControllers();
 
-            MapDependencyInjection(services);
+            MapDependencyInjection(services);            
 
             services.AddSwaggerGen(c =>
             {
@@ -37,8 +44,18 @@ namespace PersonalPage.WebApi
             });
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new CoreModule());
+
+            builder.RegisterType<RegisterUserPresenter>().SingleInstance();
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Presenter")).SingleInstance();
+        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
