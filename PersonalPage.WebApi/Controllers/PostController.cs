@@ -4,7 +4,7 @@ using PersonalPage.Data.Repositories;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PersonalPage.Server.Controllers
+namespace PersonalPage.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

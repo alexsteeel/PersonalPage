@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PersonalPage.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using PersonalPage.Data.Entities;
 using PersonalPage.Data.Repositories;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace PersonalPage.Server.Controllers
+namespace PersonalPage.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

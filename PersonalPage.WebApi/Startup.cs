@@ -6,8 +6,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PersonalPage.Data;
 using PersonalPage.Data.Repositories;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 
-namespace PersonalPage.Server
+namespace PersonalPage.WebApi
 {
     public class Startup
     {
@@ -28,6 +30,11 @@ namespace PersonalPage.Server
             services.AddControllers();
 
             MapDependencyInjection(services);
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PersonalPage", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,6 +54,13 @@ namespace PersonalPage.Server
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PersonalPage V1");
+            });
+
+            app.UseSwagger();
         }
 
         private void MapDependencyInjection(IServiceCollection services)
