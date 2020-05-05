@@ -12,7 +12,7 @@ namespace PersonalPage.Core
             _userRepository = userRepository;
         }
 
-        public async Task<bool> Handle(RegisterUserRequest message, IOutputPort<RegisterUserResponse> outputPort)
+        public async Task<bool> Handle(RegisterUserRequestDto message, IOutputPort<RegisterUserResponse> outputPort)
         {
             var response = await _userRepository.Create(new User(message.UserName, message.Email), message.Password);
             outputPort.Handle(response.Success ? new RegisterUserResponse(response.Id, true) 

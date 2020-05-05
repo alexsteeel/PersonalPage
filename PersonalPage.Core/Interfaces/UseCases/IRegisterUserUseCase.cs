@@ -1,6 +1,6 @@
 ﻿namespace PersonalPage.Core
 {
-    public interface IRegisterUserUseCase : IUseCaseRequestHandler<RegisterUserRequest, RegisterUserResponse>
+    public interface IRegisterUserUseCase : IUseCaseRequestHandler<RegisterUserRequestDto, RegisterUserResponse>
     {
     }
 }

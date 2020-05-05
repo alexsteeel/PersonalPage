@@ -1,18 +1,20 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using PersonalPage.Data;
-using PersonalPage.Data.Repositories;
-using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.OpenApi.Models;
 using PersonalPage.Core;
-using Autofac;
-using System;
+using PersonalPage.Data;
+using PersonalPage.Data.Entities;
+using PersonalPage.Data.Mapping;
+using PersonalPage.Data.Repositories;
 using System.Reflection;
-using Autofac.Extensions.DependencyInjection;
 
 namespace PersonalPage.WebApi
 {
@@ -36,6 +38,23 @@ namespace PersonalPage.WebApi
 
             services.AddControllers();
 
+            var identityBuilder = services.AddIdentityCore<ApplicationUser>(o =>
+            {
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 6;
+            });
+
+            identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(IdentityRole), identityBuilder.Services);
+            identityBuilder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
+            services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAutoMapper(typeof(DataProfile));
+
             MapDependencyInjection(services);            
 
             services.AddSwaggerGen(c =>
@@ -47,6 +66,7 @@ namespace PersonalPage.WebApi
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterModule(new CoreModule());
+            builder.RegisterModule(new DataModule());
 
             builder.RegisterType<RegisterUserPresenter>().SingleInstance();
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Presenter")).SingleInstance();

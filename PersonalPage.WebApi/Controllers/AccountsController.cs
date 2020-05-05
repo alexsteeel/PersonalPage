@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PersonalPage.Core;
+using PersonalPage.WebApi.Models.Request;
 using System.Threading.Tasks;
 
 namespace PersonalPage.WebApi.Controllers
@@ -25,7 +26,7 @@ namespace PersonalPage.WebApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            await _registerUserUseCase.Handle(new RegisterUserRequest(request.UserName, request.Email, request.Password), _registerUserPresenter);
+            await _registerUserUseCase.Handle(new RegisterUserRequestDto(request.UserName, request.Email, request.Password), _registerUserPresenter);
             return _registerUserPresenter.ContentResult;
         }
     }

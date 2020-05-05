@@ -10,7 +10,7 @@ using PersonalPage.Data;
 namespace PersonalPage.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200504154226_InitDatabase")]
+    [Migration("20200505150856_InitDatabase")]
     partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,6 +155,7 @@ namespace PersonalPage.Data.Migrations
             modelBuilder.Entity("PersonalPage.Data.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")

@@ -10,7 +10,7 @@ namespace PersonalPage.Client
 {
     public class Program
     {
-        private const string URL = "https://localhost:44394/";
+        private const string URL = "https://localhost:5000/";
 
         public static async Task Main(string[] args)
         {

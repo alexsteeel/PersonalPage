@@ -7,7 +7,7 @@
         public string UserName { get; }
         public string PasswordHash { get; }
 
-        internal User(string userName, string email, string id = null, string passwordHash = null)
+        public User(string userName, string email, string id = null, string passwordHash = null)
         {
             Id = id;
             Email = email;

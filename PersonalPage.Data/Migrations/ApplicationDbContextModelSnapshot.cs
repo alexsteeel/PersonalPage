@@ -153,6 +153,7 @@ namespace PersonalPage.Data.Migrations
             modelBuilder.Entity("PersonalPage.Data.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("AccessFailedCount")

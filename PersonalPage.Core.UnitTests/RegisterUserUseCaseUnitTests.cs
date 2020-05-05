@@ -20,7 +20,7 @@ namespace PersonalPage.Core.UnitTests
             var mockOutputPort = new Mock<IOutputPort<RegisterUserResponse>>();
             mockOutputPort.Setup(outputPort => outputPort.Handle(It.IsAny<RegisterUserResponse>()));
 
-            var response = await useCase.Handle(new RegisterUserRequest("userName", "user@mail.ru",  "password"), mockOutputPort.Object);
+            var response = await useCase.Handle(new RegisterUserRequestDto("userName", "user@mail.ru",  "password"), mockOutputPort.Object);
 
             Assert.True(response);
         }
