@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using PersonalPage.Core;
 using PersonalPage.WebApi.Controllers;
+using PersonalPage.WebApi.Models.Request;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace PersonalPage.WebApi.UnitTests
             var controller = new AccountsController(useCase, outputPort);
 
             // act
-            var result = await controller.Post(new Models.Request.RegisterUserRequest());
+            var result = await controller.Post(new RegisterUserRequest());
 
             // assert
             var statusCode = ((ContentResult)result).StatusCode;
@@ -35,11 +36,11 @@ namespace PersonalPage.WebApi.UnitTests
         }
 
         [Test]
-        public async Task Post_ModelValidationFails_ReturnsBadRequest()
+        public async Task Post_ModelValidationFails_ReturnsError()
         {
             // arrange
             var controller = new AccountsController(null, null);
-            controller.ModelState.AddModelError("FirstName", "Required");
+            controller.ModelState.AddModelError("UserName", "Required");
 
             // act
             var result = await controller.Post(null);
