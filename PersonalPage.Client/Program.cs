@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using PersonalPage.Shared.Services;
+using System.Threading.Tasks;
 
 namespace PersonalPage.Client
 {
     public class Program
     {
-        private const string URL = "https://localhost:5000/";
+        private const string URL = "https://localhost:5001/";
 
         public static async Task Main(string[] args)
         {

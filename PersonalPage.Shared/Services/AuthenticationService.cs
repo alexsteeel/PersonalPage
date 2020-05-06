@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PersonalPage.Shared.Models;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace PersonalPage.Shared.Services
@@ -21,9 +22,9 @@ namespace PersonalPage.Shared.Services
             string jsonData = JsonConvert.SerializeObject(request);
 
             HttpContent content = new StringContent(jsonData);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var methodUrl  = $"{_baseUrl}/api/auth/register";
+            var methodUrl  = $"{_baseUrl}/api/accounts";
             var response = await client.PostAsync(methodUrl, content);
             var responseAsString = await response.Content.ReadAsStringAsync();
 
@@ -39,7 +40,7 @@ namespace PersonalPage.Shared.Services
             string jsonData = JsonConvert.SerializeObject(request);
 
             HttpContent content = new StringContent(jsonData);
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             var methodUrl = $"{_baseUrl}/api/auth/login";
             var response = await client.PostAsync(methodUrl, content);
