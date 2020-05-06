@@ -7,8 +7,9 @@ namespace PersonalPage.WebApi.Models.Validation
     {
         public RegisterUserRequestValidator()
         {
-            RuleFor(x => x.UserName).Length(5, 255);
-            RuleFor(x => x.Password).Length(6, 15);
+            RuleFor(x => x.UserName).NotNull().Length(5, 20);
+            RuleFor(x => x.Email).NotNull().EmailAddress();
+            RuleFor(x => x.Password).NotNull().Length(8, 15);
             RuleFor(x => x.ConfirmPassword).Equal(x => x.Password);
         }
     }
