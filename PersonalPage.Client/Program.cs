@@ -7,7 +7,7 @@ namespace PersonalPage.Client
 {
     public class Program
     {
-        private const string URL = "https://localhost:5001/";
+        private const string URL = "https://localhost:5001";
 
         public static async Task Main(string[] args)
         {

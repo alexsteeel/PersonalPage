@@ -17,4 +17,10 @@
   <ItemGroup>
     <ProjectReference Include="..\PersonalPage.Shared\PersonalPage.Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\Auth\Register.razor">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
