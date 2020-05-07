@@ -10,7 +10,5 @@ namespace PersonalPage.Shared.Models
 
         public string[] Errors { get; set; }
 
-        public DateTime? ExpireDate { get; set; }
-
     }
 }

@@ -15,7 +15,7 @@ namespace PersonalPage.Core
         public async Task<bool> Handle(RegisterUserRequestDto message, IOutputPort<RegisterUserResponse> outputPort)
         {
             var response = await _userRepository.Create(new User(message.UserName, message.Email), message.Password);
-            outputPort.Handle(response.Success ? new RegisterUserResponse(response.Id, true) 
+            outputPort.Handle(response.Success ? new RegisterUserResponse(response.Id, true, message: "Регистрация выполнена") 
                                                : new RegisterUserResponse(response.Errors.Select(e => e.Description)));
             return response.Success;
         }
