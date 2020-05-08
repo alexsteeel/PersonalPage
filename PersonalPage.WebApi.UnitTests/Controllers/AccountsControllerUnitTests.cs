@@ -25,7 +25,7 @@ namespace PersonalPage.WebApi.UnitTests
             var outputPort = new RegisterUserPresenter();
             var useCase = new RegisterUserUseCase(mockUserRepository.Object);
 
-            var controller = new AccountsController(useCase, outputPort);
+            var controller = new RegisterController(useCase, outputPort);
 
             // act
             var result = await controller.Post(new RegisterUserRequest());
@@ -39,7 +39,7 @@ namespace PersonalPage.WebApi.UnitTests
         public async Task Post_ModelValidationFails_ReturnsError()
         {
             // arrange
-            var controller = new AccountsController(null, null);
+            var controller = new RegisterController(null, null);
             controller.ModelState.AddModelError("UserName", "Required");
 
             // act

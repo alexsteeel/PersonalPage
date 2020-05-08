@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json;
 using PersonalPage.Shared.Models;
+using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -24,13 +27,24 @@ namespace PersonalPage.Shared.Services
             HttpContent content = new StringContent(jsonData);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var methodUrl  = $"{_baseUrl}/api/accounts";
+            var methodUrl  = $"{_baseUrl}/api/register";
             var response = await client.PostAsync(methodUrl, content);
             var responseAsString = await response.Content.ReadAsStringAsync();
 
-            UserManagerResponse obj = JsonConvert.DeserializeObject<UserManagerResponse>(responseAsString);
+            var res = new UserManagerResponse();            
+            try
+            {
+                res = JsonConvert.DeserializeObject<UserManagerResponse>(responseAsString);
+            }
+            catch (Exception)
+            {
+                var badResponce = JsonConvert.DeserializeObject<BadResponce>(responseAsString);
+                Debug.WriteLine(badResponce.Errors.First().fieldName);
+                res.IsSuccess = false;
+                res.Message = $"{string.Join(" ", badResponce.Errors.Select(x => x.messageList))}";
+            }
 
-            return obj;
+            return res;
         }
 
         public async Task<UserManagerResponse> LoginUserAsync(LoginRequest request)

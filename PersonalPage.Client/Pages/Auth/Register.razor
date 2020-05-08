@@ -57,16 +57,10 @@
     {
         isBusy = true;
         var result = await authService.RegisterUserAsync(request);
-        if (result.IsSuccess)
-        {
-            message = result.Message;
-            messageType = Models.AlertMessageType.Success;
-        }
-        else
-        {
-            message = result.Errors.FirstOrDefault() ?? result.Message;
-            messageType = Models.AlertMessageType.Error;
-        }
+        
+        message = result.Message;
+        messageType = result.IsSuccess ? Models.AlertMessageType.Success : Models.AlertMessageType.Error;
+
         isBusy = false;
     }
 

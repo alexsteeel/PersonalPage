@@ -7,12 +7,12 @@ namespace PersonalPage.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountsController : ControllerBase
+    public class RegisterController : ControllerBase
     {
         private readonly IRegisterUserUseCase _registerUserUseCase;
         private readonly RegisterUserPresenter _registerUserPresenter;
 
-        public AccountsController(IRegisterUserUseCase registerUserUseCase, RegisterUserPresenter registerUserPresenter)
+        public RegisterController(IRegisterUserUseCase registerUserUseCase, RegisterUserPresenter registerUserPresenter)
         {
             _registerUserUseCase = registerUserUseCase;
             _registerUserPresenter = registerUserPresenter;
