@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace PersonalPage.WebApi.UnitTests
 {
     [TestFixture]
-    public class AccountsControllerUnitTests
+    public class RegisterControllerUnitTests
     {
         [Test]
         public async Task Post_UseCaseSucceeds_ReturnsOk()
