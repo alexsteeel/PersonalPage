@@ -1,7 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using PersonalPage.WebApi.Models.Request;
-using PersonalPage.WebApi.Models.Validation;
+using PersonalPage.WebApi.Models;
 
 namespace PersonalPage.WebApi.UnitTests.Validation
 {

@@ -1,4 +1,4 @@
-﻿namespace PersonalPage.WebApi.Models.Request
+﻿namespace PersonalPage.WebApi.Models
 {
     public class RegisterUserRequest
     {

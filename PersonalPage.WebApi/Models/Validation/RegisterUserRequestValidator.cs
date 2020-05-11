@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
-using PersonalPage.WebApi.Models.Request;
 
-namespace PersonalPage.WebApi.Models.Validation
+namespace PersonalPage.WebApi.Models
 {
     public class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
     {

@@ -3,7 +3,7 @@ using Moq;
 using NUnit.Framework;
 using PersonalPage.Core;
 using PersonalPage.WebApi.Controllers;
-using PersonalPage.WebApi.Models.Request;
+using PersonalPage.WebApi.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;

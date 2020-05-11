@@ -9,6 +9,7 @@ namespace PersonalPage.Data
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ApplicationUserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
+            builder.RegisterType<JwtFactory>().As<IJwtFactory>().SingleInstance();
         }
     }
 }

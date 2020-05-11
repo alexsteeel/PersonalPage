@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PersonalPage.Core;
-using PersonalPage.WebApi.Models.Request;
+using PersonalPage.WebApi.Models;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;

@@ -7,6 +7,7 @@ namespace PersonalPage.Core
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<RegisterUserUseCase>().As<IRegisterUserUseCase>().InstancePerLifetimeScope();
+            builder.RegisterType<LoginUseCase>().As<ILoginUseCase>().InstancePerLifetimeScope();
         }
     }
 }

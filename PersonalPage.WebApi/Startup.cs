@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using PersonalPage.Core;
@@ -17,10 +18,10 @@ using PersonalPage.Data;
 using PersonalPage.Data.Entities;
 using PersonalPage.Data.Mapping;
 using PersonalPage.Data.Repositories;
-using PersonalPage.WebApi.Models;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text;
 
 namespace PersonalPage.WebApi
 {
@@ -56,6 +57,18 @@ namespace PersonalPage.WebApi
             identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(IdentityRole), identityBuilder.Services);
             identityBuilder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+
+            var SecretKey = Configuration["Keys:Key"];
+            SymmetricSecurityKey signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+
+            services.Configure<JwtIssuerOptions>(options =>
+                {
+                    options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+                    options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
+                    options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
+                });
+
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -63,7 +76,8 @@ namespace PersonalPage.WebApi
                 .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.Configure<ApiBehaviorOptions>(apiBehaviorOptions =>
-                apiBehaviorOptions.InvalidModelStateResponseFactory = actionContext => {
+                apiBehaviorOptions.InvalidModelStateResponseFactory = actionContext =>
+                {
                     return new BadRequestObjectResult(new
                     {
                         Status = (int)HttpStatusCode.BadRequest,

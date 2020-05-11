@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Net;
 
 namespace PersonalPage.Shared.Models
 {
@@ -12,7 +13,7 @@ namespace PersonalPage.Shared.Models
         public int Status { get; set; }
 
         [JsonIgnore]
-        public bool IsSuccess { get => Status == 200; }
+        public bool IsSuccess { get => Status == (int)HttpStatusCode.OK; }
 
         [JsonIgnore]
         public string Message { get => Errors.Count == 0 && IsSuccess
