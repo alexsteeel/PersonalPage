@@ -28,14 +28,34 @@ namespace PersonalPage.Shared.UnitTests
             Assert.AreEqual("Registration failed.", responce.Message);
         }
 
-        [TestCase("{\"errors\": { \"Password\": [\"Password incorrect\"] }, \"title\": \"One or more validation errors occurred.\", \"status\": 400 }")]
+        [TestCase("{\"errors\": { \"Password\": [\"Incorrect password.\"] }, \"title\": \"One or more validation errors occurred.\", \"status\": 400 }")]
+        public void ConvertToRegisterResponce_HasError_ReturnNotSuccess(string responseAsString)
+        {
+            var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
+
+            Assert.IsInstanceOf<RegisterUserResponse>(responce);
+            Assert.IsFalse(responce.IsSuccess);
+            Assert.AreEqual("Incorrect password.", responce.Message);
+        }
+
+        [TestCase("{\"errors\": {\"Email\": [ \"Incorrect email.\"], \"Password\": [\"Incorrect password.\"] }, \"title\": \"One or more validation errors occurred.\", \"status\": 400 }")]
         public void ConvertToRegisterResponce_HasErrors_ReturnNotSuccess(string responseAsString)
         {
             var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
 
             Assert.IsInstanceOf<RegisterUserResponse>(responce);
             Assert.IsFalse(responce.IsSuccess);
-            Assert.AreEqual("Password incorrect", responce.Message);
+            Assert.AreEqual("Incorrect email. Incorrect password.", responce.Message);
+        }
+
+        [TestCase("{\"errors\": { \"Password\": [\"Incorrect password.\", \"Second message.\"] }, \"title\": \"One or more validation errors occurred.\", \"status\": 400 }")]
+        public void ConvertToRegisterResponce_HasTwoErrorMsgs_ReturnNotSuccess(string responseAsString)
+        {
+            var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
+
+            Assert.IsInstanceOf<RegisterUserResponse>(responce);
+            Assert.IsFalse(responce.IsSuccess);
+            Assert.AreEqual("Incorrect password. Second message.", responce.Message);
         }
     }
 }
