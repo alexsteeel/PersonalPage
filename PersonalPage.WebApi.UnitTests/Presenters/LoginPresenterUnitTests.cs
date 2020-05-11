@@ -19,7 +19,7 @@ namespace PersonalPage.WebApi.UnitTests.Presenters
 
             Assert.AreEqual((int)HttpStatusCode.OK, presenter.ContentResult.StatusCode);
             dynamic data = JsonConvert.DeserializeObject(presenter.ContentResult.Content);
-            Assert.AreEqual(authToken, data.authToken.Value);
+            Assert.AreEqual(authToken, data.token.authToken.Value);
         }
 
         [Test]
@@ -30,9 +30,9 @@ namespace PersonalPage.WebApi.UnitTests.Presenters
 
             presenter.Handle(new LoginResponse(new List<string>() { errorMessage }, (int)HttpStatusCode.Unauthorized));
 
-            var data = JsonConvert.DeserializeObject<IEnumerable<string>>(presenter.ContentResult.Content);
+            dynamic data = JsonConvert.DeserializeObject(presenter.ContentResult.Content);
             Assert.AreEqual((int)HttpStatusCode.Unauthorized, presenter.ContentResult.StatusCode);
-            Assert.AreEqual(errorMessage, data.First());
+            Assert.AreEqual(errorMessage, data.errors.First.Value);
         }
     }
 }

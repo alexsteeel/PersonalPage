@@ -20,7 +20,7 @@ namespace PersonalPage.WebApi.Controllers
 
         // POST api/login
         [HttpPost]
-        public async Task<ActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             await _loginUseCase.Handle(new LoginRequestDto(request.UserName, request.Password), _loginPresenter);
             return _loginPresenter.ContentResult;

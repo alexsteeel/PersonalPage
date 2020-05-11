@@ -57,7 +57,6 @@ namespace PersonalPage.Shared.Services
             var methodUrl = $"{_baseUrl}/api/register";
             var response = await client.PostAsync(methodUrl, content);
             var responseAsString = await response.Content.ReadAsStringAsync();
-            Debug.WriteLine(responseAsString);
 
             return responseAsString;
         }
@@ -71,7 +70,7 @@ namespace PersonalPage.Shared.Services
             HttpContent content = new StringContent(jsonData);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var methodUrl = $"{_baseUrl}/api/auth/login";
+            var methodUrl = $"{_baseUrl}/api/login";
             var response = await client.PostAsync(methodUrl, content);
             var responseAsString = await response.Content.ReadAsStringAsync();
 

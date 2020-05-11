@@ -15,9 +15,7 @@ namespace PersonalPage.WebApi
         public void Handle(LoginResponse response)
         {
             ContentResult.StatusCode = response.Status;
-            ContentResult.Content = response.Status == (int)HttpStatusCode.OK
-                                        ? JsonSerializer.SerializeObject(response.Token)
-                                        : JsonSerializer.SerializeObject(response.Errors);
+            ContentResult.Content = JsonSerializer.SerializeObject(response);
         }
     }
 }
