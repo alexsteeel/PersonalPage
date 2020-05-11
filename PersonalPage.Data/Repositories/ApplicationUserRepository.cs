@@ -22,7 +22,7 @@ namespace PersonalPage.Data.Repositories
         {
             var appUser = _mapper.Map<ApplicationUser>(user);
             var identityResult = await _userManager.CreateAsync(appUser, password);
-            return new CreateUserResponse(appUser.Id, identityResult.Succeeded, identityResult.Succeeded ? null : identityResult.Errors.Select(e => new Error(e.Code, e.Description)));
+            return new CreateUserResponse(appUser.Id, identityResult.Succeeded, identityResult.Succeeded ? null : identityResult.Errors.Select(e => e.Description));
         }
 
         public async Task<User> FindByName(string userName)

@@ -5,9 +5,9 @@ namespace PersonalPage.Core
     public abstract class BaseGatewayResponse
     {
         public bool Success { get; }
-        public IEnumerable<Error> Errors { get; }
+        public IEnumerable<string> Errors { get; }
 
-        protected BaseGatewayResponse(bool success = false, IEnumerable<Error> errors = null)
+        protected BaseGatewayResponse(bool success = false, IEnumerable<string> errors = null)
         {
             Success = success;
             Errors = errors;

@@ -4,6 +4,8 @@ using NUnit.Framework;
 using PersonalPage.Core;
 using PersonalPage.WebApi.Controllers;
 using PersonalPage.WebApi.Models.Request;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -36,18 +38,28 @@ namespace PersonalPage.WebApi.UnitTests
         }
 
         [Test]
-        public async Task Post_ModelValidationFails_ReturnsError()
+        public async Task Post_DbFails_ReturnsError()
         {
+            var errorMessage = "UserName exists.";
+            var errors = new List<string>() { errorMessage };
             // arrange
-            var controller = new RegisterController(null, null);
-            controller.ModelState.AddModelError("UserName", "Required");
+            var mockUserRepository = new Mock<IUserRepository>();
+            mockUserRepository
+                .Setup(repo => repo.Create(It.IsAny<User>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(new CreateUserResponse("", false, errors)));
+
+            // fakes
+            var outputPort = new RegisterUserPresenter();
+            var useCase = new RegisterUserUseCase(mockUserRepository.Object);
+
+            var controller = new RegisterController(useCase, outputPort);
 
             // act
-            var result = await controller.Post(null);
+            var result = await controller.Post(new RegisterUserRequest());
 
             // assert
-            Assert.IsInstanceOf<BadRequestObjectResult>(result);
-            Assert.IsInstanceOf<SerializableError>((result as BadRequestObjectResult).Value);
+            Assert.AreEqual((int)HttpStatusCode.BadRequest, ((JsonContentResult)result).StatusCode);
+            Assert.IsTrue(((JsonContentResult)result).Content.Contains(errorMessage));
         }
     }
 }

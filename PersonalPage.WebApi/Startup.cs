@@ -17,6 +17,9 @@ using PersonalPage.Data;
 using PersonalPage.Data.Entities;
 using PersonalPage.Data.Mapping;
 using PersonalPage.Data.Repositories;
+using PersonalPage.WebApi.Models;
+using System.Linq;
+using System.Net;
 using System.Reflection;
 
 namespace PersonalPage.WebApi
@@ -56,7 +59,18 @@ namespace PersonalPage.WebApi
             services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+            services.AddMvc()
+                .AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            services.Configure<ApiBehaviorOptions>(apiBehaviorOptions =>
+                apiBehaviorOptions.InvalidModelStateResponseFactory = actionContext => {
+                    return new BadRequestObjectResult(new
+                    {
+                        Status = (int)HttpStatusCode.BadRequest,
+                        Errors = actionContext.ModelState.Values.SelectMany(x => x.Errors)
+                            .Select(x => x.ErrorMessage)
+                    });
+                });
 
             services.AddAutoMapper(typeof(DataProfile));
 
@@ -89,7 +103,9 @@ namespace PersonalPage.WebApi
             builder.RegisterModule(new DataModule());
 
             builder.RegisterType<RegisterUserPresenter>().SingleInstance();
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).Where(t => t.Name.EndsWith("Presenter")).SingleInstance();
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .Where(t => t.Name.EndsWith("Presenter"))
+                .SingleInstance();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

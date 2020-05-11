@@ -5,7 +5,7 @@
         public FailRegisterUserResponse()
         {
             Status = 400;
-            Errors.UserName.Add("Registration failed.");
+            Errors.Add("Registration failed.");
         }
     }
 }

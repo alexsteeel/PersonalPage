@@ -2,13 +2,11 @@
 {
     public abstract class UseCaseResponseMessage
     {
-        public bool IsSuccess { get; }
-        public string Message { get; }
+        public int Status { get; }
 
-        protected UseCaseResponseMessage(bool isSuccess = false, string message = null)
+        protected UseCaseResponseMessage(int status)
         {
-            IsSuccess = isSuccess;
-            Message = message;
+            Status = status;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace PersonalPage.WebApi
 
         public void Handle(RegisterUserResponse response)
         {
-            ContentResult.StatusCode = (int)(response.IsSuccess ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
+            ContentResult.StatusCode = response.Status;
             ContentResult.Content = JsonSerializer.SerializeObject(response);
         }
     }

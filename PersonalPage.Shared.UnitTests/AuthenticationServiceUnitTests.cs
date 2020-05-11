@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using PersonalPage.Shared.Models;
 using PersonalPage.Shared.Services;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace PersonalPage.Shared.UnitTests
         [TestCase(@"{""title"":""One or more validation errors occurred."",""status"":400}")]
         [TestCase(@"{""errors"":{}, ""title"":""One or more validation errors occurred."",""status"":400}")]
         [TestCase(@"{""errors"":{""Password"":[""', ""title"":""One or more validation errors occurred."",""status"":400}")]
-        public void ConvertToRegisterResponce_IncorrectErrors_ReturnNotSuccess(string responseAsString)
+        public void ConvertToRegisterResponce_IncorrectResponseString_ReturnNotSuccess(string responseAsString)
         {
             var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
 
@@ -28,7 +28,17 @@ namespace PersonalPage.Shared.UnitTests
             Assert.AreEqual("Registration failed.", responce.Message);
         }
 
-        [TestCase("{\"errors\": { \"Password\": [\"Incorrect password.\"] }, \"title\": \"One or more validation errors occurred.\", \"status\": 400 }")]
+        [TestCase("{\"id\": \"1\", \"status\": 200 }")]
+        public void ConvertToRegisterResponce_SuccessRegistration_ReturnSuccess(string responseAsString)
+        {
+            var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
+
+            Assert.IsInstanceOf<RegisterUserResponse>(responce);
+            Assert.IsTrue(responce.IsSuccess);
+            Assert.AreEqual("Registration successful.", responce.Message);
+        }
+
+        [TestCase("{ \"errors\": [ \"Incorrect password.\" ], \"status\": 400 }")]
         public void ConvertToRegisterResponce_HasError_ReturnNotSuccess(string responseAsString)
         {
             var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
@@ -38,7 +48,7 @@ namespace PersonalPage.Shared.UnitTests
             Assert.AreEqual("Incorrect password.", responce.Message);
         }
 
-        [TestCase("{\"errors\": {\"Email\": [ \"Incorrect email.\"], \"Password\": [\"Incorrect password.\"] }, \"title\": \"One or more validation errors occurred.\", \"status\": 400 }")]
+        [TestCase("{ \"errors\": [ \"Incorrect email.\", \"Incorrect password.\" ], \"status\": 400 }")]
         public void ConvertToRegisterResponce_HasErrors_ReturnNotSuccess(string responseAsString)
         {
             var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
@@ -46,16 +56,6 @@ namespace PersonalPage.Shared.UnitTests
             Assert.IsInstanceOf<RegisterUserResponse>(responce);
             Assert.IsFalse(responce.IsSuccess);
             Assert.AreEqual("Incorrect email. Incorrect password.", responce.Message);
-        }
-
-        [TestCase("{\"errors\": { \"Password\": [\"Incorrect password.\", \"Second message.\"] }, \"title\": \"One or more validation errors occurred.\", \"status\": 400 }")]
-        public void ConvertToRegisterResponce_HasTwoErrorMsgs_ReturnNotSuccess(string responseAsString)
-        {
-            var responce = AuthenticationService.ConvertToRegisterResponce(responseAsString);
-
-            Assert.IsInstanceOf<RegisterUserResponse>(responce);
-            Assert.IsFalse(responce.IsSuccess);
-            Assert.AreEqual("Incorrect password. Second message.", responce.Message);
         }
     }
 }

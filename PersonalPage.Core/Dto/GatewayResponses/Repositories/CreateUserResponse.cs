@@ -6,7 +6,7 @@ namespace PersonalPage.Core
     {
         public string Id { get; }
 
-        public CreateUserResponse(string id, bool success = false, IEnumerable<Error> errors = null) : base(success, errors)
+        public CreateUserResponse(string id, bool success = false, IEnumerable<string> errors = null) : base(success, errors)
         {
             Id = id;
         }

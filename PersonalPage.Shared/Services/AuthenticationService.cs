@@ -57,6 +57,7 @@ namespace PersonalPage.Shared.Services
             var methodUrl = $"{_baseUrl}/api/register";
             var response = await client.PostAsync(methodUrl, content);
             var responseAsString = await response.Content.ReadAsStringAsync();
+            Debug.WriteLine(responseAsString);
 
             return responseAsString;
         }
