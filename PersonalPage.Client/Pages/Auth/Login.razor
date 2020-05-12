@@ -5,6 +5,7 @@
 
 @inject AuthenticationService  authService
 @inject NavigationManager navigationManager
+@inject ILocalStorageService storageService
 
 <div class="row">
     <div class="col-12">
@@ -48,6 +49,12 @@
         var result = await authService.LoginUserAsync(model);
         if (result.IsSuccess)
         {
+            var userInfo = new LocalUserInfo()
+            {
+                AccessToken = result.Token.AuthToken
+            };
+            await storageService.SetItemAsync("User", userInfo);
+
             navigationManager.NavigateTo("/");
         }
         else

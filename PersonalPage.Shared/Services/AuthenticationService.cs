@@ -61,7 +61,7 @@ namespace PersonalPage.Shared.Services
             return responseAsString;
         }
 
-        public async Task<RegisterUserResponse> LoginUserAsync(LoginRequest request)
+        public async Task<LoginResponse> LoginUserAsync(LoginRequest request)
         {
             HttpClient client = new HttpClient();
 
@@ -74,7 +74,7 @@ namespace PersonalPage.Shared.Services
             var response = await client.PostAsync(methodUrl, content);
             var responseAsString = await response.Content.ReadAsStringAsync();
 
-            RegisterUserResponse obj = JsonConvert.DeserializeObject<RegisterUserResponse>(responseAsString);
+            LoginResponse obj = JsonConvert.DeserializeObject<LoginResponse>(responseAsString);
 
             return obj;
         }

@@ -4,6 +4,7 @@ namespace PersonalPage.Core
 {
     public class LoginResponse : UseCaseResponseMessage
     {
+
         public Token Token { get; }
         public IEnumerable<string> Errors { get; }
 
