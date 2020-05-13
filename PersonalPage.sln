@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalPage.WebApi.UnitTes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{92DFECB1-9BE5-4414-BBE3-7938D56E6EF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalPage.Shared.UnitTests", "PersonalPage.Shared.UnitTests\PersonalPage.Shared.UnitTests.csproj", "{DDD94FF4-9EF2-4B9C-AF02-92A7A89B208A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalPage.Shared.UnitTests", "PersonalPage.Shared.UnitTests\PersonalPage.Shared.UnitTests.csproj", "{DDD94FF4-9EF2-4B9C-AF02-92A7A89B208A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
