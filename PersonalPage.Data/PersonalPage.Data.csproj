@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20200504154145_InitDatabase.Designer.cs" />
     <Compile Remove="Migrations\20200504154226_InitDatabase.cs" />
     <Compile Remove="Migrations\20200504154226_InitDatabase.Designer.cs" />
+    <Compile Remove="Migrations\20200516182016_AddUserIdForAuthor.cs" />
+    <Compile Remove="Migrations\20200516182016_AddUserIdForAuthor.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
