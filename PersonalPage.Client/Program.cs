@@ -20,6 +20,11 @@ namespace PersonalPage.Client
                 return new AuthenticationService(URL);
             });
 
+            builder.Services.AddScoped(s =>
+            {
+                return new PostsService(URL);
+            });
+
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddBaseAddressHttpClient();

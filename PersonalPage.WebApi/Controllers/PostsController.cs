@@ -8,11 +8,11 @@ namespace PersonalPage.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController : ControllerBase
+    public class PostsController : ControllerBase
     {
         private readonly IBaseRepository<Post> _db;
 
-        public PostController(IBaseRepository<Post> db)
+        public PostsController(IBaseRepository<Post> db)
         {
             _db = db;
         }
