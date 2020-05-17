@@ -100,7 +100,7 @@ else
     bool checkAuthor(string id)
     {
         var userState = authenticationState.Result;
-        var userId = userState.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        var userId = userState.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return id == userId;
     }
 
