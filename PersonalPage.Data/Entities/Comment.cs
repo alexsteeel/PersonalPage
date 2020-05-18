@@ -10,7 +10,7 @@ namespace PersonalPage.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
 
         [ForeignKey("AuthorId")]
         public Author Author { get; set; }
