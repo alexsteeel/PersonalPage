@@ -10,7 +10,7 @@ namespace PersonalPage.Shared.Models
         public int Id { get; set; }
 
         [JsonProperty("authorId")]
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
 
         [JsonProperty("author")]
         public Author Author { get; set; }

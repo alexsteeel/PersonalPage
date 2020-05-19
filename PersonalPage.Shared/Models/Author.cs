@@ -5,9 +5,6 @@ namespace PersonalPage.Shared.Models
 {
     public class Author
     {
-        [JsonProperty("id")]
-        public int Id { get; set; }
-
         [JsonProperty("userId")]
         public string UserId { get; set; }
 
