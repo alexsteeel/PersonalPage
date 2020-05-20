@@ -34,7 +34,7 @@ else
                     <a href='/posts/details/@post.Id'>@post.Title</a>
                     <p>@post.Content</p>
 
-                    @if (checkAuthor(post.Author?.UserId))
+                    @if (checkAuthor(post.AuthorId))
                     {
                         <hr />
                         <div class="row">
