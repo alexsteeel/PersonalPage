@@ -1,0 +1,94 @@
+﻿@page "/posts/details/{id}"
+
+@inject PostsService  postsService
+@inject NavigationManager navigationManager
+
+@attribute [Authorize]
+
+<h3>@model.Title</h3>
+
+<div class="row">
+    <div class="col-6">
+        <EditForm Model="model" OnValidSubmit="async () => await editPostAsync()">
+            <RadzenCard>
+                <AlertMessage Message="@message" MessageType="@messageType" />
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <RadzenTextBox Placeholder="Title" @bind-Value="model.Title" Style="margin:10px;" />
+                <Radzen.Blazor.RadzenTextArea Placeholder="Content" @bind-Value="@model.Content" Style="margin:10px;" />
+
+                <hr />
+                <RadzenButton ButtonType="Radzen.ButtonType.Submit" ButtonStyle="Radzen.ButtonStyle.Success"
+                              Disabled="isBusy" Style="margin:5px" class="btn btn-block" Text="Edit" />
+            </RadzenCard>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    PostRequest model = new PostRequest();
+
+    bool isBusy = false;
+
+    ElementReference inputReference;
+
+    // Alert
+    string message = string.Empty;
+    Models.AlertMessageType messageType = Models.AlertMessageType.Success;   
+
+    async Task editPostAsync()
+    {
+        isBusy = true;
+
+        var post = await postsService.EditPostAsync(model);
+
+        if (post != null)
+        {
+            message = "Post edited successfully";
+            messageType = Models.AlertMessageType.Success;
+        }
+        else
+        {
+            message = "Error";
+            messageType = Models.AlertMessageType.Error;
+        }
+
+        isBusy = false;
+    }
+
+    async Task getPostById()
+    {
+        isBusy = true;
+
+        var post = await postsService.GetPostByIdAsync(Id);
+        if (post != null)
+        {
+            model.Title = post.Title;
+            model.Content = post.Content;
+            model.Id = Id;
+        }
+        else
+        {
+            message = "Error";
+            messageType = Models.AlertMessageType.Error;
+        }
+
+        isBusy = false;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var userState = authenticationState.Result;
+        string accessToken = userState.User.FindFirst("AccessToken").Value; ;
+        postsService.AccessToken = accessToken;
+        await getPostById();
+    }
+}

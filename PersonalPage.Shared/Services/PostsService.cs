@@ -33,18 +33,17 @@ namespace PersonalPage.Shared.Services
             return obj;
         }
 
-        public async Task<PostSingleResponse> GetPostByIdAsync(string id)
+        public async Task<Post> GetPostByIdAsync(string id)
         {
-            var methodUrl = $"{_baseUrl}/api/posts?page={id}";
+            var methodUrl = $"{_baseUrl}/api/posts/{id}";
             HttpClient client = new HttpClient();
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
             var response = await client.GetAsync(methodUrl);
             var jsonData = await response.Content.ReadAsStringAsync();
 
-            var obj = JsonConvert.DeserializeObject<PostSingleResponse>(jsonData);
-
-            return obj;
+            var post = JsonConvert.DeserializeObject<Post>(jsonData);
+            return post;
         }
 
         public async Task<PostsCollectionPagingResponse> SearchPostsByPageAsync(string query, int page = 1)
@@ -79,7 +78,7 @@ namespace PersonalPage.Shared.Services
             return obj;
         }
 
-        public async Task<PostSingleResponse> EditPostAsync(PostRequest model)
+        public async Task<Post> EditPostAsync(PostRequest model)
         {
             var methodUrl = $"{_baseUrl}/api/posts";
             HttpClient client = new HttpClient();
@@ -94,14 +93,14 @@ namespace PersonalPage.Shared.Services
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            var obj = JsonConvert.DeserializeObject<PostSingleResponse>(responseString);
+            var post = JsonConvert.DeserializeObject<Post>(responseString);
 
-            return obj;
+            return post;
         }
 
         public async Task<PostSingleResponse> DeletePostAsync(string id)
         {
-            var methodUrl = $"{_baseUrl}/api/plans/{id}";
+            var methodUrl = $"{_baseUrl}/api/posts/{id}";
             HttpClient client = new HttpClient();
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
