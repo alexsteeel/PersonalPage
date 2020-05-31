@@ -21,7 +21,7 @@ namespace PersonalPage.WebApi.Controllers
         [HttpGet]
         public async Task<IEnumerable<Comment>> GetComments()
         {
-            var comments = await _db.GetAsync();
+            var comments = await _db.GetAllAsync();
             return comments;
         }
 
@@ -29,7 +29,7 @@ namespace PersonalPage.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
-            var comment = await _db.FindAsync(x => x.Id == id);
+            var comment = await _db.GetByIdAsync(id);
 
             if (comment == null)
             {
@@ -45,7 +45,7 @@ namespace PersonalPage.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            var createdComment = await _db.CreateAsync(comment);
+            var createdComment = await _db.AddAsync(comment);
 
             return CreatedAtAction("GetComment", new { id = createdComment.Id }, createdComment);
         }

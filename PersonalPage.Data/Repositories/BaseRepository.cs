@@ -1,85 +1,59 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PersonalPage.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PersonalPage.Data.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        internal readonly ApplicationDbContext context;
+        protected readonly DbContext Context;
 
-        public BaseRepository(ApplicationDbContext appContext)
+        public BaseRepository(DbContext context)
         {
-            this.context = appContext;
+            this.Context = context;
         }
-
-        public async Task<T> CreateAsync(T entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
-            context.Add<T>(entity);
-            await context.SaveChangesAsync();
+            await Context.Set<TEntity>().AddAsync(entity);
             return entity;
         }
 
-        public async Task<T> FindAsync(Expression<Func<T, bool>> filter, string includeProperties = null)
+        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-            IQueryable<T> query = context.Set<T>();
-
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            if (includeProperties != null)
-            {
-                foreach (var includeProperty in includeProperties
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
-
-            return await query.FirstOrDefaultAsync();
+            await Context.Set<TEntity>().AddRangeAsync(entities);
         }
 
-        public async Task<T> GetAsync(int id)
+        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return await context.FindAsync<T>(id);
+            return Context.Set<TEntity>().Where(predicate);
         }
 
-        public async Task<IEnumerable<T>> GetAsync(
-            Expression<Func<T, bool>> filter = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            string includeProperties = null)
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            IQueryable<T> query = context.Set<T>();
+            return await Context.Set<TEntity>().ToListAsync();
+        }
 
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
+        public ValueTask<TEntity> GetByIdAsync(int id)
+        {
+            return Context.Set<TEntity>().FindAsync(id);
+        }
 
-            if (includeProperties != null)
-            {
-                foreach (var includeProperty in includeProperties
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProperty);
-                }
-            }
+        public void Remove(TEntity entity)
+        {
+            Context.Set<TEntity>().Remove(entity);
+        }
 
-            if (orderBy != null)
-            {
-                return await orderBy(query).ToListAsync();
-            }
-            else
-            {
-                return await query.ToListAsync();
-            }
+        public void RemoveRange(IEnumerable<TEntity> entities)
+        {
+            Context.Set<TEntity>().RemoveRange(entities);
+        }
+
+        public Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return Context.Set<TEntity>().SingleOrDefaultAsync(predicate);
         }
     }
 }
