@@ -27,7 +27,6 @@ namespace PersonalPage.Client
 
             builder.RootComponents.Add<App>("app");
 
-            builder.Services.AddBaseAddressHttpClient();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
