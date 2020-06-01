@@ -39,15 +39,39 @@ namespace PersonalPage.WebApi.Controllers
             return post;
         }
 
-        // POST: api/Comments
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // POST: api/Posts/Create
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Post post)
+        public async Task<ActionResult<Post>> CreatePost(Post post)
         {
-            var createdPost = await _db.AddAsync(post);
-
+            var createdPost = await _db.CreateAsync(post);
             return CreatedAtAction("GetPost", new { id = createdPost.Id }, createdPost);
+        }
+
+        // PUT: api/Posts/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePost(long id, Post post)
+        {
+            if (id != post.Id)
+            {
+                return BadRequest();
+            }
+
+            await _db.UpdateAsync(post);
+            return Ok();
+        }
+
+        // DELETE: api/Posts/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeletePost(int id)
+        {
+            var post = await _db.GetByIdAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            await _db.Delete(post);
+            return Ok();
         }
     }
 }
