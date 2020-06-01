@@ -40,14 +40,39 @@ namespace PersonalPage.WebApi.Controllers
         }
 
         // POST: api/Comments
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            var createdComment = await _db.AddAsync(comment);
+            var createdComment = await _db.CreateAsync(comment);
 
             return CreatedAtAction("GetComment", new { id = createdComment.Id }, createdComment);
+        }
+
+        // PUT: api/Comments/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateComment(int id, Comment comment)
+        {
+            if (id != comment.Id)
+            {
+                return BadRequest();
+            }
+
+            await _db.UpdateAsync(comment);
+            return Ok();
+        }
+
+        // DELETE: api/Comments/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteComment(int id)
+        {
+            var comment = await _db.GetByIdAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            await _db.Delete(comment);
+            return Ok();
         }
     }
 }
