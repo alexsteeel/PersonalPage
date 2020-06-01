@@ -9,26 +9,11 @@ namespace PersonalPage.Data.Repositories
 {
     public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
     {
-        protected readonly DbContext Context;
+        protected readonly ApplicationDbContext Context;
 
-        public BaseRepository(DbContext context)
+        public BaseRepository(ApplicationDbContext appContext)
         {
-            this.Context = context;
-        }
-        public async Task<TEntity> AddAsync(TEntity entity)
-        {
-            await Context.Set<TEntity>().AddAsync(entity);
-            return entity;
-        }
-
-        public async Task AddRangeAsync(IEnumerable<TEntity> entities)
-        {
-            await Context.Set<TEntity>().AddRangeAsync(entities);
-        }
-
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            return Context.Set<TEntity>().Where(predicate);
+            this.Context = appContext;
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -41,19 +26,28 @@ namespace PersonalPage.Data.Repositories
             return Context.Set<TEntity>().FindAsync(id);
         }
 
-        public void Remove(TEntity entity)
+        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        {
+            return Context.Set<TEntity>().Where(predicate);
+        }
+
+        public async Task<TEntity> CreateAsync(TEntity entity)
+        {
+            await Context.Set<TEntity>().AddAsync(entity);
+            await Context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task UpdateAsync(TEntity entity)
+        {
+            await Task.Run(() => Context.Set<TEntity>().Update(entity));
+            await Context.SaveChangesAsync();
+        }
+
+        public async Task Delete(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
-        }
-
-        public void RemoveRange(IEnumerable<TEntity> entities)
-        {
-            Context.Set<TEntity>().RemoveRange(entities);
-        }
-
-        public Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
-        {
-            return Context.Set<TEntity>().SingleOrDefaultAsync(predicate);
+            await Context.SaveChangesAsync();
         }
     }
 }

@@ -10,10 +10,8 @@ namespace PersonalPage.Data.Repositories
         ValueTask<TEntity> GetByIdAsync(int id);
         Task<IEnumerable<TEntity>> GetAllAsync();
         IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
-        Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
-        Task<TEntity> AddAsync(TEntity entity);
-        Task AddRangeAsync(IEnumerable<TEntity> entities);
-        void Remove(TEntity entity);
-        void RemoveRange(IEnumerable<TEntity> entities);
+        Task<TEntity> CreateAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
+        Task Delete(TEntity entity);
     }
 }
