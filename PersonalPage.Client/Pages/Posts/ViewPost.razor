@@ -1,0 +1,71 @@
+﻿@page "/posts/show/{id}"
+
+@inject PostsService  postsService
+@inject NavigationManager navigationManager
+
+@attribute [Authorize]
+
+<h3>@post.Title</h3>
+
+<div class="row">
+    <div class="col-6">
+        <RadzenCard>
+            <b>@post.Content</b>
+        </RadzenCard>
+
+        <RadzenCard>
+            <RadzenListBox @bind-Value="@post.Comments"
+                           TextProperty="Content"
+                           Style="margin-bottom: 20px;height:200px;" />
+
+            <div class="row">
+                <div class="col-6">
+                    <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" Text="Add comment"
+                                  Click='() => navigationManager.NavigateTo($"/comments/add")'
+                                  class="btn-block" />
+                </div>
+            </div>
+        </RadzenCard>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    Post post = new Post();
+
+    bool isBusy = false;
+
+    ElementReference inputReference;
+
+    // Alert
+    string message = string.Empty;
+    Models.AlertMessageType messageType = Models.AlertMessageType.Success;
+
+    async Task getPostById()
+    {
+        isBusy = true;
+
+        post = await postsService.GetPostByIdAsync(Id);
+        if (post == null)
+        {
+            message = "Error";
+            messageType = Models.AlertMessageType.Error;
+        }
+
+        isBusy = false;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var userState = authenticationState.Result;
+        string accessToken = userState.User.FindFirst("AccessToken").Value; ;
+        postsService.AccessToken = accessToken;
+        await getPostById();
+    }
+}
