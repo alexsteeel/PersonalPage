@@ -18,7 +18,7 @@ namespace PersonalPage.Shared.Services
 
         public string AccessToken { get; set; }
 
-        public async Task<PostsCollectionPagingResponse> GetAllPostsByPageAsync(int page = 1)
+        public async Task<CollectionPagingResponse<Post>> GetAllPostsByPageAsync(int page = 1)
         {
             var methodUrl = $"{_baseUrl}/api/posts?page={page}";
             HttpClient client = new HttpClient();
@@ -28,7 +28,7 @@ namespace PersonalPage.Shared.Services
             var jsonData = await response.Content.ReadAsStringAsync();
 
             var posts = JsonConvert.DeserializeObject<List<Post>>(jsonData);
-            var obj = new PostsCollectionPagingResponse() { Records = posts };
+            var obj = new CollectionPagingResponse<Post>() { Records = posts };
 
             return obj;
         }
@@ -46,7 +46,7 @@ namespace PersonalPage.Shared.Services
             return post;
         }
 
-        public async Task<PostsCollectionPagingResponse> SearchPostsByPageAsync(string query, int page = 1)
+        public async Task<CollectionPagingResponse<Post>> SearchPostsByPageAsync(string query, int page = 1)
         {
             var methodUrl = $"{_baseUrl}/api/posts/search?query={query}&page={page}";
             HttpClient client = new HttpClient();
@@ -55,12 +55,12 @@ namespace PersonalPage.Shared.Services
             var response = await client.GetAsync(methodUrl);
             var jsonData = await response.Content.ReadAsStringAsync();
 
-            var obj = JsonConvert.DeserializeObject<PostsCollectionPagingResponse>(jsonData);
+            var obj = JsonConvert.DeserializeObject<CollectionPagingResponse<Post>>(jsonData);
 
             return obj;
         }
 
-        public async Task<PostSingleResponse> CreatePostAsync(PostRequest model)
+        public async Task<SingleResponse<Post>> CreatePostAsync(PostRequest model)
         {
             var methodUrl = $"{_baseUrl}/api/posts";
             HttpClient client = new HttpClient();
@@ -73,7 +73,7 @@ namespace PersonalPage.Shared.Services
             var response = await client.PostAsync(methodUrl, content);
             var responseAsString = await response.Content.ReadAsStringAsync();
 
-            var obj = JsonConvert.DeserializeObject<PostSingleResponse>(responseAsString);
+            var obj = JsonConvert.DeserializeObject<SingleResponse<Post>>(responseAsString);
 
             return obj;
         }
@@ -98,7 +98,7 @@ namespace PersonalPage.Shared.Services
             return post;
         }
 
-        public async Task<PostSingleResponse> DeletePostAsync(string id)
+        public async Task<SingleResponse<Post>> DeletePostAsync(string id)
         {
             var methodUrl = $"{_baseUrl}/api/posts/{id}";
             HttpClient client = new HttpClient();
@@ -108,7 +108,7 @@ namespace PersonalPage.Shared.Services
             var response = await client.DeleteAsync(methodUrl + "/" + id);
             var jsonData = await response.Content.ReadAsStringAsync();
 
-            var obj = JsonConvert.DeserializeObject<PostSingleResponse>(jsonData);
+            var obj = JsonConvert.DeserializeObject<SingleResponse<Post>>(jsonData);
 
             return obj;
         }

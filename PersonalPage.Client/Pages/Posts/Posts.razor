@@ -31,7 +31,7 @@ else
         {
             <div class="col-4">
                 <RadzenCard Style="margin:10px">
-                    <a href='/posts/details/@post.Id'>@post.Title</a>
+                    <a href='/posts/show/@post.Id'>@post.Title</a>
                     <p>@post.Content</p>
 
                     @if (checkAuthor(post.AuthorId))
@@ -114,7 +114,7 @@ else
         if (PageNumber == null)
             PageNumber = 1;
 
-        PostsCollectionPagingResponse result;
+        CollectionPagingResponse<Post> result;
 
         if (string.IsNullOrWhiteSpace(Query))
             result = await postsService.GetAllPostsByPageAsync(PageNumber.Value);

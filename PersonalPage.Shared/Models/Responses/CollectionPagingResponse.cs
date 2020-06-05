@@ -2,9 +2,9 @@
 
 namespace PersonalPage.Shared.Models
 {
-    public class PostsCollectionPagingResponse : BaseAPIResponse
+    public class CollectionPagingResponse<T> : BaseAPIResponse
     {
-        public IList<Post> Records { get; set; }
+        public IList<T> Records { get; set; }
 
         public int Page { get; set; }
 
