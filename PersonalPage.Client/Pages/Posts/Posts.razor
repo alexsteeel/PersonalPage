@@ -149,7 +149,7 @@ else
         isBusy = true;
 
         var result = await postsService.DeletePostAsync(selectedPostId);
-        if (result.IsSuccess)
+        if (result == System.Net.HttpStatusCode.OK)
         {
             var deletedPost = posts.SingleOrDefault(p => p.Id.ToString() == selectedPostId);
             posts.Remove(deletedPost);

@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PersonalPage.Shared.Models;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -74,6 +76,7 @@ namespace PersonalPage.Shared.Services
             var responseAsString = await response.Content.ReadAsStringAsync();
 
             var obj = JsonConvert.DeserializeObject<SingleResponse<Post>>(responseAsString);
+            obj.IsSuccess = response.StatusCode == HttpStatusCode.Created;
 
             return obj;
         }
@@ -98,19 +101,17 @@ namespace PersonalPage.Shared.Services
             return post;
         }
 
-        public async Task<SingleResponse<Post>> DeletePostAsync(string id)
+        public async Task<HttpStatusCode> DeletePostAsync(string id)
         {
             var methodUrl = $"{_baseUrl}/api/posts/{id}";
             HttpClient client = new HttpClient();
 
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
 
-            var response = await client.DeleteAsync(methodUrl + "/" + id);
-            var jsonData = await response.Content.ReadAsStringAsync();
+            var response = await client.DeleteAsync(methodUrl);
+            var statusCode = response.StatusCode;
 
-            var obj = JsonConvert.DeserializeObject<SingleResponse<Post>>(jsonData);
-
-            return obj;
+            return statusCode;
         }
     }
 }

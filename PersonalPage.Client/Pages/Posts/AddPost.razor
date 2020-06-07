@@ -54,10 +54,12 @@
         var result = await postsService.CreatePostAsync(model);
 
         if (result.IsSuccess)
+        {
             navigationManager.NavigateTo("/Posts");
+        }
         else
         {
-            message = result.Message;
+            message = string.IsNullOrWhiteSpace(result.Message) ? "Возникла ошибка при создании нового поста" : result.Message;
             messageType = Models.AlertMessageType.Error;
         }
 
