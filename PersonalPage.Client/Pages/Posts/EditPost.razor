@@ -48,16 +48,16 @@
     {
         isBusy = true;
 
-        var post = await postsService.EditPostAsync(model);
+        var statusCode = await postsService.EditPostAsync(model);
 
-        if (post != null)
+        if (statusCode == System.Net.HttpStatusCode.OK)
         {
-            message = "Post edited successfully";
+            message = "Пост успешно обновлен.";
             messageType = Models.AlertMessageType.Success;
         }
         else
         {
-            message = "Error";
+            message = "Возникла ошибка при обновлении.";
             messageType = Models.AlertMessageType.Error;
         }
 

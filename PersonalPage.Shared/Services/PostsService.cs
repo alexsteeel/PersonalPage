@@ -81,7 +81,7 @@ namespace PersonalPage.Shared.Services
             return obj;
         }
 
-        public async Task<Post> EditPostAsync(PostRequest model)
+        public async Task<HttpStatusCode> EditPostAsync(PostRequest model)
         {
             var methodUrl = $"{_baseUrl}/api/posts";
             HttpClient client = new HttpClient();
@@ -93,12 +93,9 @@ namespace PersonalPage.Shared.Services
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             var response = await client.PutAsync(methodUrl + "/" + model.Id, content);
+            var statusCode = response.StatusCode;
 
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            var post = JsonConvert.DeserializeObject<Post>(responseString);
-
-            return post;
+            return statusCode;
         }
 
         public async Task<HttpStatusCode> DeletePostAsync(string id)
