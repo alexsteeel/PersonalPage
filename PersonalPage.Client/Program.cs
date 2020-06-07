@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PersonalPage.Client
 {
-    public class Program
+    public static class Program
     {
         private const string URL = "https://localhost:5001";
 
