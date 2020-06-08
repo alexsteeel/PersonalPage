@@ -155,6 +155,7 @@ namespace PersonalPage.WebApi
         private void MapDependencyInjection(IServiceCollection services)
         {
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped(typeof(IPostRepository), typeof(PostRepository));
         }
     }
 }

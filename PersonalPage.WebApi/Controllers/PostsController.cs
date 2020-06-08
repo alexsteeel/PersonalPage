@@ -10,9 +10,9 @@ namespace PersonalPage.WebApi.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly IBaseRepository<Post> _db;
+        private readonly IPostRepository _db;
 
-        public PostsController(IBaseRepository<Post> db)
+        public PostsController(IPostRepository db)
         {
             _db = db;
         }
@@ -29,7 +29,7 @@ namespace PersonalPage.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
         {
-            var post = await _db.GetByIdAsync(id);
+            var post = await Task.Run(() => _db.GetById(id));
 
             if (post == null)
             {
@@ -49,7 +49,7 @@ namespace PersonalPage.WebApi.Controllers
 
         // PUT: api/Posts/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePost(long id, Post post)
+        public async Task<IActionResult> UpdatePost(int id, Post post)
         {
             if (id != post.Id)
             {
