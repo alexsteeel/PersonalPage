@@ -11,17 +11,20 @@
     <div class="col-6">
         <RadzenCard>
             <b>@post.Content</b>
+
+            <RadzenListBox @bind-Value="@Comments"
+                           Data="@Comments"
+                           TextProperty="Content"
+                           ValueProperty="Id" />
         </RadzenCard>
 
         <RadzenCard>
-            <RadzenListBox @bind-Value="@post.Comments"
-                           TextProperty="Content"
-                           Style="margin-bottom: 20px;height:200px;" />
+
 
             <div class="row">
                 <div class="col-6">
-                    <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" Text="Add comment"
-                                  Click='() => navigationManager.NavigateTo($"/comments/add")'
+                    <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" Text="Комментировать"
+                                  Click='() => navigationManager.NavigateTo($"/comments/add/{post.Id}")'
                                   class="btn-block" />
                 </div>
             </div>
@@ -38,6 +41,8 @@
     public string Id { get; set; }
 
     Post post = new Post();
+
+    List<Comment> Comments;
 
     bool isBusy = false;
 
@@ -57,6 +62,8 @@
             message = "Error";
             messageType = Models.AlertMessageType.Error;
         }
+
+        Comments = post.Comments.ToList();
 
         isBusy = false;
     }

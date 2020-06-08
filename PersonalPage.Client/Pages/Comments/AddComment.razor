@@ -1,0 +1,67 @@
+﻿@page "/comments/add/{postId}"
+
+@inject CommentsService commentsService
+@inject NavigationManager navigationManager
+
+@attribute [Authorize]
+
+<div class="row">
+    <div class="col-6">
+        <EditForm Model="model" OnValidSubmit="async () => await postCommentAsync()">
+            <RadzenCard>
+                <AlertMessage Message="@message" MessageType="@messageType" />
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <Radzen.Blazor.RadzenTextArea Placeholder="Комментарий" @bind-Value="@model.Content" Style="margin:10px;" />
+                <hr />
+                <RadzenButton ButtonType="Radzen.ButtonType.Submit"
+                              ButtonStyle="Radzen.ButtonStyle.Success"
+                              Disabled="isBusy"
+                              Style="margin:5px" class="btn btn-block"
+                              Text="Insert" />
+            </RadzenCard>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    [Parameter]
+    public string PostId { get; set; }
+
+    CommentRequest model = new CommentRequest();
+
+    bool isBusy = false;
+
+    ElementReference inputReference;
+
+    string message = string.Empty;
+    Models.AlertMessageType messageType = Models.AlertMessageType.Success;
+
+    async Task postCommentAsync()
+    {
+        isBusy = true;
+
+        var userState = authenticationState.Result;
+        commentsService.AccessToken = userState.User.FindFirst("AccessToken").Value;
+
+        model.AuthorId = userState.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        model.PostId = PostId;
+
+        var result = await commentsService.CreateCommentAsync(model);
+
+        if (result.IsSuccess)
+            navigationManager.NavigateTo("/Posts");
+        else
+        {
+            message = result.Message;
+            messageType = Models.AlertMessageType.Error;
+        }
+
+        isBusy = false;
+    }
+}

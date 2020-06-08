@@ -25,6 +25,11 @@ namespace PersonalPage.Client
                 return new PostsService(URL);
             });
 
+            builder.Services.AddScoped(s =>
+            {
+                return new CommentsService(URL);
+            });
+
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddBlazoredLocalStorage();
