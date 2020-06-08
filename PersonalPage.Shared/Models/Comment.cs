@@ -25,10 +25,10 @@ namespace PersonalPage.Shared.Models
         public string Content { get; set; }
 
         [JsonProperty("parentCommentId")]
-        public int ParentCommentId { get; set; }
+        public int? ParentCommentId { get; set; }
 
         [JsonProperty("comments")]
-        public IList<object> Comments { get; set; }
+        public IList<Comment> Comments { get; set; }
 
         [JsonProperty("approved")]
         public bool Approved { get; set; }
