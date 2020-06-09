@@ -16,7 +16,19 @@
                 <ValidationSummary />
 
                 <RadzenTextBox Placeholder="Title" @bind-Value="model.Title" Style="margin:10px;" />
-                <Radzen.Blazor.RadzenTextArea Placeholder="Description" @bind-Value="@model.Content" Style="margin:10px;" />
+
+                <div class="row">
+
+                    <div class="col-6">
+                        <Radzen.Blazor.RadzenTextArea Placeholder="Content"
+                                                      @oninput="@(args => Change(args.Value.ToString()))"
+                                                      Style="margin:10px;" />
+                    </div>
+
+                    <div class="col-6">
+                        @((MarkupString) Preview)
+                    </div>
+                </div>
                 <hr />
                 <RadzenButton ButtonType="Radzen.ButtonType.Submit"
                               ButtonStyle="Radzen.ButtonStyle.Success"
@@ -30,6 +42,13 @@
 
 @code {
 
+    void Change(string text)
+    {
+        model.Content = text;
+        Preview = Markdown.ToHtml(text);
+        StateHasChanged();
+    }
+
     [CascadingParameter]
     private Task<AuthenticationState> authenticationState { get; set; }
 
@@ -41,6 +60,8 @@
 
     string message = string.Empty;
     Models.AlertMessageType messageType = Models.AlertMessageType.Success;
+
+    public string Preview { get; set; }
 
     async Task postPlanAsync()
     {
