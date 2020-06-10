@@ -5,48 +5,81 @@
 
 @attribute [Authorize]
 
-<h3>Add a new Post</h3>
+<h3 align="center">Создание статьи</h3>
 
-<div class="row">
-    <div class="col-6">
-        <EditForm Model="model" OnValidSubmit="async () => await postPlanAsync()">
-            <RadzenCard>
-                <AlertMessage Message="@message" MessageType="@messageType" />
-                <DataAnnotationsValidator />
-                <ValidationSummary />
+<div class="col-12">
+    <EditForm Model="model"
+              OnValidSubmit="async () => await postPlanAsync()">
+        <RadzenCard >
+            <AlertMessage Message="@message" MessageType="@messageType" />
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-                <RadzenTextBox Placeholder="Title" @bind-Value="model.Title" Style="margin:10px;" />
-
-                <div class="row">
-
-                    <div class="col-6">
-                        <Radzen.Blazor.RadzenTextArea Placeholder="Content"
-                                                      @oninput="@(args => Change(args.Value.ToString()))"
-                                                      Style="margin:10px;" />
-                    </div>
-
-                    <div class="col-6">
-                        @((MarkupString) Preview)
-                    </div>
+            <div class="row">
+                <div class="col-6">
+                    <RadzenTextBox Placeholder="Заголовок"
+                                   @bind-Value="model.Title"
+                                   @oninput="@(args => ChangeTitle(args.Value.ToString()))"
+                                   Style="margin:10px; width:100%" />
                 </div>
-                <hr />
-                <RadzenButton ButtonType="Radzen.ButtonType.Submit"
-                              ButtonStyle="Radzen.ButtonStyle.Success"
-                              Disabled="isBusy"
-                              Style="margin:5px" class="btn btn-block"
-                              Text="Insert" />
-            </RadzenCard>
-        </EditForm>
-    </div>
+
+                <div class="col-6">
+                    <h3>@model.Title</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <RadzenTextArea Placeholder="Краткое описание"
+                                    @bind-Value="model.ShortDescription"
+                                    @oninput="@(args => ChangeDescription(args.Value.ToString()))"
+                                    Style="margin:10px; width:100%" />
+                </div>
+
+                <div class="col-6">
+                    <h5>@model.ShortDescription</h5>
+                </div>
+            </div>
+
+            <p style="margin:10px;">В содержании можно использовать язык разметки MarkDown.</p>
+
+            <div class="row">
+                <div class="col-6">
+                    <Radzen.Blazor.RadzenTextArea Placeholder="Содержание"
+                                                  @oninput="@(args => ChangeContent(args.Value.ToString()))"
+                                                  Style="margin:10px; width:100%;" />
+                </div>
+
+                <div class="col-6">
+                    @((MarkupString) Preview)
+                </div>
+            </div>
+
+            <RadzenButton ButtonType="Radzen.ButtonType.Submit"
+                          ButtonStyle="Radzen.ButtonStyle.Success"
+                          Disabled="isBusy"
+                          Style="margin:5px" class="btn btn-block"
+                          Text="Insert" />
+        </RadzenCard>
+    </EditForm>
 </div>
 
 @code {
 
-    void Change(string text)
+    void ChangeTitle(string text)
+    {
+        model.Title = text;
+    }
+
+    void ChangeDescription(string text)
+    {
+        model.ShortDescription = text;
+    }
+
+    void ChangeContent(string text)
     {
         model.Content = text;
         Preview = Markdown.ToHtml(text);
-        StateHasChanged();
     }
 
     [CascadingParameter]
