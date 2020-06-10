@@ -21,6 +21,9 @@ namespace PersonalPage.Shared.Models
         [JsonProperty("title")]
         public string Title { get; set; }
 
+        [JsonProperty("shortDescription")]
+        public string ShortDescription { get; set; }
+
         [JsonProperty("content")]
         public string Content { get; set; }
 

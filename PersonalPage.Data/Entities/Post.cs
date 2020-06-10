@@ -22,6 +22,10 @@ namespace PersonalPage.Data.Entities
         public string Title { get; set; }
 
         [Required]
+        [MaxLength(500)]
+        public string ShortDescription { get; set; }
+
+        [Required]
         public string Content { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
