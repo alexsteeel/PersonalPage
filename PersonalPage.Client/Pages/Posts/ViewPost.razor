@@ -5,74 +5,74 @@
 
 @attribute [Authorize]
 
-<h3>@post.Title</h3>
+    <RadzenCard Style="margin: 0 0 10px 0">
+        <h2 align="center">@post.Title</h2>
+    </RadzenCard>
 
-<div class="row">
-    <div class="col-6">
-        <RadzenCard>
-            <b>@post.Content</b>
+    <RadzenCard Style="margin: 0 0 10px 0">
+        @((MarkupString) Preview)
+    </RadzenCard>
 
-            <RadzenListBox @bind-Value="@Comments"
-                           Data="@Comments"
-                           TextProperty="Content"
-                           ValueProperty="Id" />
-        </RadzenCard>
+    <RadzenCard>
+        <RadzenListBox @bind-Value="@Comments"
+                       Data="@Comments"
+                       TextProperty="Content"
+                       ValueProperty="Id" />
 
-        <RadzenCard>
-
-
-            <div class="row">
-                <div class="col-6">
-                    <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" Text="Комментировать"
-                                  Click='() => navigationManager.NavigateTo($"/comments/add/{post.Id}")'
-                                  class="btn-block" />
-                </div>
+        <div class="row">
+            <div class="col-6">
+                <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" Text="Комментировать"
+                              Click='() => navigationManager.NavigateTo($"/comments/add/{post.Id}")'
+                              class="btn-block" />
             </div>
-        </RadzenCard>
-    </div>
-</div>
+        </div>
+    </RadzenCard>
 
-@code {
+    @code {
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationState { get; set; }
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationState { get; set; }
 
-    [Parameter]
-    public string Id { get; set; }
+        [Parameter]
+        public string Id { get; set; }
 
-    Post post = new Post();
+        Post post = new Post();
 
-    List<Comment> Comments;
+        public string Preview { get; set; }
 
-    bool isBusy = false;
+        List<Comment> Comments;
 
-    ElementReference inputReference;
+        bool isBusy = false;
 
-    // Alert
-    string message = string.Empty;
-    Models.AlertMessageType messageType = Models.AlertMessageType.Success;
+        ElementReference inputReference;
 
-    async Task getPostById()
-    {
-        isBusy = true;
+        // Alert
+        string message = string.Empty;
+        Models.AlertMessageType messageType = Models.AlertMessageType.Success;
 
-        post = await postsService.GetPostByIdAsync(Id);
-        if (post == null)
+        async Task getPostById()
         {
-            message = "Error";
-            messageType = Models.AlertMessageType.Error;
+            isBusy = true;
+
+            post = await postsService.GetPostByIdAsync(Id);
+            if (post == null)
+            {
+                message = "Error";
+                messageType = Models.AlertMessageType.Error;
+                return;
+            }
+
+            Preview = Markdown.ToHtml(post.Content);
+            Comments = post.Comments.ToList();
+
+            isBusy = false;
         }
 
-        Comments = post.Comments.ToList();
-
-        isBusy = false;
+        protected async override Task OnInitializedAsync()
+        {
+            var userState = authenticationState.Result;
+            string accessToken = userState.User.FindFirst("AccessToken").Value; ;
+            postsService.AccessToken = accessToken;
+            await getPostById();
+        }
     }
-
-    protected async override Task OnInitializedAsync()
-    {
-        var userState = authenticationState.Result;
-        string accessToken = userState.User.FindFirst("AccessToken").Value; ;
-        postsService.AccessToken = accessToken;
-        await getPostById();
-    }
-}

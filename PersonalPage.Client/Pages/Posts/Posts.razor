@@ -21,7 +21,10 @@ else
 else
 {
     <div class="row">
-        <RadzenTextBox Placeholder="Search Query" @bind-Value="Query" /><RadzenButton Text="Search" Click="async () => await getPostsAsync()" />
+        <RadzenTextBox Placeholder="Search Query"
+                       @bind-Value="Query" />
+        
+        <RadzenButton Text="Search" Click="async () => await getPostsAsync()" />
     </div>
     <hr />
 
@@ -32,7 +35,7 @@ else
             <div class="col-4">
                 <RadzenCard Style="margin:10px">
                     <a href='/posts/show/@post.Id'>@post.Title</a>
-                    <p>@post.Content</p>
+                    <p>@post.ShortDescription</p>
 
                     @if (checkAuthor(post.AuthorId))
                     {
