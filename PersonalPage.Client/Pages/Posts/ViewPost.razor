@@ -5,74 +5,80 @@
 
 @attribute [Authorize]
 
-    <RadzenCard Style="margin: 0 0 10px 0">
-        <h2 align="center">@post.Title</h2>
-    </RadzenCard>
+<RadzenCard Style="margin: 0 0 10px 0">
+    <h2 align="center">@post.Title</h2>
+</RadzenCard>
 
-    <RadzenCard Style="margin: 0 0 10px 0">
-        @((MarkupString) Preview)
-    </RadzenCard>
+<RadzenCard Style="margin: 0 0 10px 0">
+    @((MarkupString) Preview)
+</RadzenCard>
 
-    <RadzenCard>
-        <RadzenListBox @bind-Value="@Comments"
-                       Data="@Comments"
-                       TextProperty="Content"
-                       ValueProperty="Id" />
+<RadzenCard Style="margin: 0 0 10px 0">
 
-        <div class="row">
-            <div class="col-6">
-                <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light" Text="Комментировать"
-                              Click='() => navigationManager.NavigateTo($"/comments/add/{post.Id}")'
-                              class="btn-block" />
-            </div>
-        </div>
-    </RadzenCard>
-
-    @code {
-
-        [CascadingParameter]
-        private Task<AuthenticationState> authenticationState { get; set; }
-
-        [Parameter]
-        public string Id { get; set; }
-
-        Post post = new Post();
-
-        public string Preview { get; set; }
-
-        List<Comment> Comments;
-
-        bool isBusy = false;
-
-        ElementReference inputReference;
-
-        // Alert
-        string message = string.Empty;
-        Models.AlertMessageType messageType = Models.AlertMessageType.Success;
-
-        async Task getPostById()
+    @if (post == null || post.Comments == null)
+    {
+        <p>...Loading</p>
+    }
+    else
+    {
+        foreach (var comment in post.Comments)
         {
-            isBusy = true;
-
-            post = await postsService.GetPostByIdAsync(Id);
-            if (post == null)
-            {
-                message = "Error";
-                messageType = Models.AlertMessageType.Error;
-                return;
-            }
-
-            Preview = Markdown.ToHtml(post.Content);
-            Comments = post.Comments.ToList();
-
-            isBusy = false;
-        }
-
-        protected async override Task OnInitializedAsync()
-        {
-            var userState = authenticationState.Result;
-            string accessToken = userState.User.FindFirst("AccessToken").Value; ;
-            postsService.AccessToken = accessToken;
-            await getPostById();
+            <p>@comment.Content</p>
         }
     }
+
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <RadzenButton ButtonStyle="Radzen.ButtonStyle.Light"
+                          Text="Комментировать"
+                          Click='() => navigationManager.NavigateTo($"/comments/add/{post.Id}")'
+                          class="btn-block" />
+        </div>
+    </div>
+</RadzenCard>
+
+@code {
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    Post post = new Post();
+
+    public string Preview { get; set; }
+
+    bool isBusy = false;
+
+    ElementReference inputReference;
+
+    // Alert
+    string message = string.Empty;
+    Models.AlertMessageType messageType = Models.AlertMessageType.Success;
+
+    async Task getPostById()
+    {
+        isBusy = true;
+
+        post = await postsService.GetPostByIdAsync(Id);
+        if (post == null)
+        {
+            message = "Error";
+            messageType = Models.AlertMessageType.Error;
+            return;
+        }
+
+        Preview = Markdown.ToHtml(post.Content);
+
+        isBusy = false;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var userState = authenticationState.Result;
+        string accessToken = userState.User.FindFirst("AccessToken").Value; ;
+        postsService.AccessToken = accessToken;
+        await getPostById();
+    }
+}
